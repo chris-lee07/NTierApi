@@ -25,7 +25,7 @@ namespace NTierApi.Web.Controllers
             return results.Select(client => new Client(client));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<Client> GetClient(int id)
         {
             var result = await _clientService.GetByClientId(id);
@@ -41,7 +41,7 @@ namespace NTierApi.Web.Controllers
             return new Client(result);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("name/{name}")]
         public async Task<Client> GetClient(string name)
         {
             var result = await _clientService.GetByClientByName(name);

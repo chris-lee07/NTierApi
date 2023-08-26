@@ -17,7 +17,7 @@ namespace NTierApi.Web.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("clientId/{id}")]
         public async Task<IEnumerable<Employee>> GetEmployees(int id)
         {
             var results = await _employeeService.GetEmployees(id);

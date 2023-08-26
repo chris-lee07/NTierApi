@@ -11,6 +11,5 @@ namespace NTierApi.Data.Models
         public string ClientName { get; set; }
         public string Industry { get; set; }
         public string Description { get; set; }
-        public ICollection<EmployeeDbo> Employees { get; set; }
     }
 }
