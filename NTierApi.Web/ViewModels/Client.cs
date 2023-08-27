@@ -11,11 +11,15 @@ namespace NTierApi.Web.ViewModels
             ClientName = client.ClientName;
             Industry = client.Industry;
             Description = client.Description;
+
+            Employees = client.Employees?.Select(emp => new Employee(emp));
         }
 
         public int ClientId { get; set; }
         public string ClientName { get; set; }
         public string Industry { get; set; }
         public string Description { get; set; }
+
+        public IEnumerable<Employee> Employees { get; set; }
     }
 }

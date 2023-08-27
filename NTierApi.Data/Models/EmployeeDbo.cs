@@ -11,6 +11,9 @@ namespace NTierApi.Data.Models
         public string First { get; set; }
         public string Last { get; set; }
         public string Position { get; set; }
+
+        [ForeignKey("Client")]
         public int ClientId { get; set; }
+        public ClientDbo Client { get; set; }
     }
 }

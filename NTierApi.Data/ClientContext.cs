@@ -10,6 +10,8 @@ namespace NTierApi.Data
 
         }
 
+        public ClientContext() { }
+
         public virtual DbSet<ClientDbo> Clients { get; set; }
         public virtual DbSet<EmployeeDbo> Employees { get; set; }
     }
