@@ -1,4 +1,5 @@
-using BenefitsEstimator.Test;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,55 +16,45 @@ namespace NTierApi.Test
         private readonly Mock<ClientContext> _clientContext;
         private readonly Mock<ILogger<ClientService>> _logger;
 
-        public ClientServiceTests()
-        {
-            _clientContext = new Mock<ClientContext>();
-            _logger = new Mock<ILogger<ClientService>>();
-            _clientService = new ClientService(_clientContext.Object, _logger.Object);
-        }
-
-        #region Variables
-        private const int SomeClientId = 123;
-        private const int SomeOtherClientId = 456;
-        private const string SomeClientName = "SomeClientName";
-        private const string SomeOtherClientName = "SomeOtherClientName";
-        private const string SomeIndustry = "SomeIndustry";
-        private const string SomeOtherIndustry = "SomeOtherIndustry";
-        private const string SomeDescription = "SomeDescription";
-        private const string SomeOtherDescription = "SomeOtherDescription";
-
         private ClientDbo SomeClientDbo;
         private ClientDbo SomeOtherClientDbo;
-        #endregion
+        private const int SomeClientId = 123;
+        private const int SomeOtherClientId = 456;
+        private const int SomeRandomClientId = 789;
+
+        public ClientServiceTests()
+        {
+            var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+            _clientContext = fixture.Freeze<Mock<ClientContext>>();
+            _logger = fixture.Freeze<Mock<ILogger<ClientService>>>();
+        }
 
         [SetUp]
         public void Setup()
         {
-            SomeClientDbo = new ClientDbo
-            {
-                ClientId = SomeClientId,
-                ClientName = SomeClientName,
-                Industry = SomeIndustry,
-                Description = SomeDescription
-            };
-            SomeOtherClientDbo = new ClientDbo
-            {
-                ClientId = SomeOtherClientId,
-                ClientName = SomeOtherClientName,
-                Industry = SomeOtherIndustry,
-                Description = SomeOtherDescription
-            };
-
-            var clientList = new List<ClientDbo> { SomeClientDbo, SomeOtherClientDbo };
-            var clientDbSet = DbSetHelper.GetDbSetMock(clientList);
-            _clientContext.Setup(ctx => ctx.Clients).Returns(clientDbSet.Object);
+            var fixture = new Fixture().Customize(new AutoMoqCustomization());
+            SomeClientDbo = fixture.Build<ClientDbo>().With(client => client.ClientId, SomeClientId).Create();
+            SomeOtherClientDbo = fixture.Build<ClientDbo>().With(client => client.ClientId, SomeOtherClientId).Create();
         }
 
         [Test]
         public async Task ReturnCorrectClient()
         {
-            var client = await _clientService.GetByClientId(SomeClientId);
+            // Arrange
+            var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
+            var logger = fixture.Freeze<Mock<ILogger<ClientService>>>();
+            var clientContext = fixture.Freeze<Mock<ClientContext>>();
+            var clientDbSet = fixture.Freeze<Mock<DbSet<ClientDbo>>>();
+            clientDbSet.Setup(cds => cds.FirstOrDefaultAsync(c => c.ClientId == SomeClientId, It.IsAny<CancellationToken>())).ReturnsAsync(SomeClientDbo);
+            clientContext.Setup(cc => cc.Clients).Returns(clientDbSet.Object);
+            var clientService = fixture.Create<ClientService>();
+
+            // Act
+            var client = await clientService.GetByClientId(SomeClientId);
+
+            // Assert
             Assert.That(client.ClientId, Is.EqualTo(SomeClientId));
         }
     }

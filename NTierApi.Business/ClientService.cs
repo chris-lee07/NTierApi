@@ -1,34 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using NTierApi.Data;
+﻿using Microsoft.Extensions.Logging;
 using NTierApi.Data.Models;
+using NTierApi.Data.Repositories;
 
 namespace NTierApi.Business
 {
     public class ClientService : IClientService
     {
-        private readonly ClientContext _dbContext;
+        private readonly IClientRepository _clientRepository;
         private readonly ILogger<ClientService> _logger;
 
-        public ClientService(ClientContext dbContext, ILogger<ClientService> logger)
+        public ClientService(IClientRepository clientRepository, ILogger<ClientService> logger)
         {
-            _dbContext = dbContext;
+            _clientRepository = clientRepository;
             _logger = logger;
         }
 
         public async Task<ClientDbo> GetByClientId(int clientId)
         {
-            return await _dbContext.Clients.Include(client => client.Employees).FirstOrDefaultAsync(c => c.ClientId == clientId);
+            return await _clientRepository.GetByClientId(clientId);
         }
 
         public async Task<ClientDbo> GetByClientByName(string clientName)
         {
-            return await _dbContext.Clients.Include(client => client.Employees).FirstOrDefaultAsync(c => c.ClientName == clientName);
+            return await _clientRepository.GetByClientByName(clientName);
         }
 
         public async Task<IEnumerable<ClientDbo>> GetClients()
         {
-            return await _dbContext.Clients.ToListAsync();
+            return await _clientRepository.GetClients();
         }
     }
 }

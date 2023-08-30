@@ -1,29 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using NTierApi.Data;
+﻿using Microsoft.Extensions.Logging;
 using NTierApi.Data.Models;
+using NTierApi.Data.Repositories;
 
 namespace NTierApi.Business
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly ClientContext _dbContext;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly ILogger<EmployeeService> _logger;
 
-        public EmployeeService(ClientContext dbContext, ILogger<EmployeeService> logger)
+        public EmployeeService(IEmployeeRepository employeeRepository, ILogger<EmployeeService> logger)
         {
-            _dbContext = dbContext;
+            _employeeRepository = employeeRepository;
             _logger = logger;
         }
 
         public async Task<EmployeeDbo> GetEmployee(int employeeId, int clientId)
         {
-            return await _dbContext.Employees.FirstOrDefaultAsync(e => e.ClientId == clientId && e.EmployeeId == employeeId);
+            return await _employeeRepository.GetEmployee(employeeId, clientId);
         }
 
         public async Task<IEnumerable<EmployeeDbo>> GetEmployees(int cliendId)
         {
-            return await _dbContext.Employees.Where(e => e.ClientId == cliendId).ToListAsync();
+            return await _employeeRepository.GetEmployees(cliendId);
         }
     }
 }

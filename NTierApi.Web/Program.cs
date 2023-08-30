@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NTierApi.Business;
 using NTierApi.Data;
+using NTierApi.Data.Repositories;
 using static NTierApi.Data.DBInitializer;
 
 // Initialize configuration
@@ -20,6 +21,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ClientContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 // Register interfaces to services
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
