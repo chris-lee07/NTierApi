@@ -28,6 +28,8 @@ namespace NTierApi.Data.Repositories
         public async Task<IEnumerable<ClientDbo>> GetClients()
         {
             return await _dbContext.Clients.ToListAsync();
+
+            //return await _dbContext.Clients.FromSqlRaw("SELECT ClientId, ClientName, Industry, Description FROM dbo.Clients").ToListAsync<ClientDbo>();
         }
     }
 }
