@@ -3,7 +3,6 @@ using AutoFixture.AutoMoq;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NTierApi.Business;
-using NTierApi.Data;
 using NTierApi.Data.Models;
 using NTierApi.Data.Repositories;
 
@@ -39,9 +38,7 @@ namespace NTierApi.Test
         public async Task ReturnCorrectClientByClientId()
         {
             // Arrange
-            var logger = _fixture.Freeze<Mock<ILogger<ClientService>>>();
-            var clientRepo = _fixture.Freeze<Mock<IClientRepository>>();
-            clientRepo.Setup(cr => cr.GetByClientId(SomeClientId)).ReturnsAsync(SomeClientDbo);
+            _clientRepo.Setup(cr => cr.GetByClientId(SomeClientId)).ReturnsAsync(SomeClientDbo);
             var clientService = _fixture.Create<ClientService>();
 
             // Act
@@ -56,9 +53,7 @@ namespace NTierApi.Test
         public async Task ReturnsNoClientByClientId()
         {
             // Arrange
-            var logger = _fixture.Freeze<Mock<ILogger<ClientService>>>();
-            var clientRepo = _fixture.Freeze<Mock<IClientRepository>>();
-            clientRepo.Setup(cr => cr.GetByClientId(SomeClientId)).ReturnsAsync(SomeClientDbo);
+            _clientRepo.Setup(cr => cr.GetByClientId(SomeClientId)).ReturnsAsync(SomeClientDbo);
             var clientService = _fixture.Create<ClientService>();
 
             // Act
@@ -72,9 +67,7 @@ namespace NTierApi.Test
         public async Task ReturnCorrectClientByClientName()
         {
             // Arrange
-            var logger = _fixture.Freeze<Mock<ILogger<ClientService>>>();
-            var clientRepo = _fixture.Freeze<Mock<IClientRepository>>();
-            clientRepo.Setup(cr => cr.GetByClientByName(SomeClientName)).ReturnsAsync(SomeClientDbo);
+            _clientRepo.Setup(cr => cr.GetByClientByName(SomeClientName)).ReturnsAsync(SomeClientDbo);
             var clientService = _fixture.Create<ClientService>();
 
             // Act
@@ -89,9 +82,7 @@ namespace NTierApi.Test
         public async Task ReturnsNoClientByClientName()
         {
             // Arrange
-            var logger = _fixture.Freeze<Mock<ILogger<ClientService>>>();
-            var clientRepo = _fixture.Freeze<Mock<IClientRepository>>();
-            clientRepo.Setup(cr => cr.GetByClientByName(SomeClientName)).ReturnsAsync(SomeClientDbo);
+            _clientRepo.Setup(cr => cr.GetByClientByName(SomeClientName)).ReturnsAsync(SomeClientDbo);
             var clientService = _fixture.Create<ClientService>();
 
             // Act
@@ -106,10 +97,8 @@ namespace NTierApi.Test
         {
             // Arrange
             int clientCount = 5;
-            var logger = _fixture.Freeze<Mock<ILogger<ClientService>>>();
-            var clientRepo = _fixture.Freeze<Mock<IClientRepository>>();
             var clients = _fixture.Build<ClientDbo>().CreateMany(clientCount).ToList();
-            clientRepo.Setup(cr => cr.GetClients()).ReturnsAsync(clients);
+            _clientRepo.Setup(cr => cr.GetClients()).ReturnsAsync(clients);
             var clientService = _fixture.Create<ClientService>();
 
             // Act
