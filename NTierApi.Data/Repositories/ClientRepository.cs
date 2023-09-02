@@ -17,12 +17,12 @@ namespace NTierApi.Data.Repositories
 
         public async Task<ClientDbo> GetByClientId(int clientId)
         {
-            return await _dbContext.Clients.Include(client => client.Employees).FirstOrDefaultAsync(c => c.ClientId == clientId);
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.ClientId == clientId);
         }
 
         public async Task<ClientDbo> GetByClientByName(string clientName)
         {
-            return await _dbContext.Clients.Include(client => client.Employees).FirstOrDefaultAsync(c => c.ClientName == clientName);
+            return await _dbContext.Clients.FirstOrDefaultAsync(c => c.ClientName == clientName);
         }
 
         public async Task<IEnumerable<ClientDbo>> GetClients()
